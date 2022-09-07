@@ -1,0 +1,23 @@
+#: import menu menu
+
+MainWidget:
+
+
+<MainWidget>:
+    canvas.before:
+        Rectangle:
+            size: self.size
+            source: r"images\bg1.jpg"
+            
+    menuwidget: menuwidget
+    perspective_point_x : self.width/2
+    perspective_point_y : self.height * 0.75
+    
+    MenuWidget:
+        id: menuwidget
+
+    Label:
+        text: root.score_menu
+        font_size: "20dp"
+        size_hint: .18, .18
+        pos_hint: {"x":0, "top":1}
