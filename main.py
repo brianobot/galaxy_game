@@ -1,7 +1,9 @@
+import os
+
 from kivy.config import Config
 from kivy.uix.relativelayout import RelativeLayout
-Config.set('graphics', 'width', '900') #setting the application window width
-Config.set('graphics', 'height', '400') #setting the application window height
+Config.set('graphics', 'width', '900') # setting the application window width
+Config.set('graphics', 'height', '400') # setting the application window height
 
 import kivy
 kivy.require('1.9.0')
@@ -13,16 +15,18 @@ from kivy.graphics import Quad, Color, Triangle
 from kivy.properties import Clock
 from kivy.core.window import Window
 from kivy import platform
-from random import choice
 from kivy.lang import Builder
 from kivy.core.audio import SoundLoader
+
 import time
+from random import choice
+
 
 Builder.load_file("menu.kv")
 
 # the root widget , for creating the whole GUI
 class MainWidget(RelativeLayout):
-    from transforms import transform, transform_2D, transform_Perspective #module containing important transformation functions
+    from transforms import transform, transform_2D, transform_Perspective # module containing important transformation functions
     from user_actions import _on_keyboard_down, _on_keyboard_up, on_touch_down, on_touch_up 
 
     menuwidget = ObjectProperty()
@@ -34,16 +38,16 @@ class MainWidget(RelativeLayout):
     menu_title = StringProperty("G   A   L   A   X   Y")
     menu_button = StringProperty("START")
 
-    V_NB_LINES = 8 #number of vertical lines in the game window
-    V_SPACING = .2 #percentage spacing of the vertical lines with respect to game window
-    vertical_lines = [] #list holding ref to all vertical lines in the game screen
+    V_NB_LINES = 8 # number of vertical lines in the game window
+    V_SPACING = .2 # percentage spacing of the vertical lines with respect to game window
+    vertical_lines = [] # list holding ref to all vertical lines in the game screen
 
-    H_NB_LINES = 15 #number of horizontal lines in the game
+    H_NB_LINES = 15 # number of horizontal lines in the game
     H_SPACING = .25  # percentage spacing of the horizontal lines with respec to game width
     horizontal_lines = [] # list holding ref to all horozontal lines in the game screen
 
     current_offset_y = 0  # diff between declared lines and drawn line in y axis
-    #testing exponential speed 
+    # testing exponential speed 
     SPEED = 4  # vertical speed of grids, downwards speed
     current_loop = 0
 
@@ -52,10 +56,10 @@ class MainWidget(RelativeLayout):
 
     current_speed_x = 0 # instantaneous speed on x axis
 
-    NB_TILES = 15 #number of tiles to be used in the display
-    tiles = [] #this is a variable to hold the tile list reference
-    tile = None #for testing of a single tile display (uncomment tile variable and comment tiles variable if you want to test single tile)
-    tiles_coordinates = [] #list to all the generate tiles coordinate
+    NB_TILES = 15 # number of tiles to be used in the display
+    tiles = [] # this is a variable to hold the tile list reference
+    tile = None # for testing of a single tile display (uncomment tile variable and comment tiles variable if you want to test single tile)
+    tiles_coordinates = [] # list to all the generate tiles coordinate
 
     ti_x, ti_y = 1, 4
 
@@ -75,7 +79,6 @@ class MainWidget(RelativeLayout):
     gameover_sound = None
     gameimpact = None
 
-  
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
         self.init_vertical_lines()
@@ -91,12 +94,12 @@ class MainWidget(RelativeLayout):
         Clock.schedule_interval(self.update, 1/60 )
 
     def init_audio(self):
-        self.sound_begin = SoundLoader.load(r"audio\begin.wav")
-        self.sound_galaxy = SoundLoader.load(r"audio\galaxy.wav")
-        self.game_soundtrack = SoundLoader.load(r"audio\t.mp3")
-        self.gameover_sound = SoundLoader.load(r"audio\gameover_voice.wav")
-        self.gameimpact = SoundLoader.load(r"audio\gameover_impact.wav")
-        self.encourage = SoundLoader.load(r"audio\emma.wav")
+        self.sound_begin = SoundLoader.load(os.path.join("audio", "begin.wav"))
+        self.sound_galaxy = SoundLoader.load(os.path.join("audio", "galaxy.wav"))
+        self.game_soundtrack = SoundLoader.load(os.path.join("audio", "t.mp3"))
+        self.gameover_sound = SoundLoader.load(os.path.join("audio", "gameover_voice.wav"))
+        self.gameimpact = SoundLoader.load(os.path.join("audio", "gameover_impact.wav"))
+        self.encourage = SoundLoader.load(os.path.join("audio", "emma.wav"))
 
     def reset_game(self):
         self.current_offset_y = 0
@@ -106,13 +109,12 @@ class MainWidget(RelativeLayout):
         self.current_speed_x = 0
 
         self.tiles_coordinates = []
-        self.score_menu = "SCORE:" + str(self.current_loop)
+        self.score_menu = "SCORE: " + str(self.current_loop)
         self.pre_fill_tiles_coordinates()
         self.generate_tiles_coordinates()
 
         self.state_game_over = False
-
-    
+   
     def is_desktop(self):
         if platform in ['win', 'macosx', 'linux']:
             return True
@@ -194,7 +196,7 @@ class MainWidget(RelativeLayout):
 
     def init_tiles(self):
         with self.canvas:
-            Color(1,1,1,1)
+            Color(1, 1, 1, 1)
             for i in range(0, self.NB_TILES):
                 self.tiles.append(Quad())
 
@@ -313,7 +315,7 @@ class MainWidget(RelativeLayout):
                 self.current_loop += 1
                 if self.current_loop%100 == 0:
                     self.encourage.play()
-                self.score_menu = "SCORE:" + str(self.current_loop)
+                self.score_menu = "SCORE: " + str(self.current_loop)
                 self.generate_tiles_coordinates()
 
             speed_x = (self.SPEED_x * self.width)/200 #very interesting hack ...to allow speed to look constant despite window's width
@@ -345,8 +347,9 @@ class GalaxyApp(App):
     sound = None
     def on_start(self):
         self.title = "Brian's Game"
-        self.sound = SoundLoader.load(r"audio\galaxy.wav")
+        self.sound = SoundLoader.load(os.path.join("audio", "galaxy.wav"))
         self.sound.play()
+ 
  
 # the program engine, prevent the script from auto-execution, if it was imported
 if __name__ == "__main__":
