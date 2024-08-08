@@ -1,4 +1,5 @@
 import os
+from functools import partial
 
 from kivy.config import Config
 from kivy.uix.relativelayout import RelativeLayout
@@ -18,9 +19,10 @@ from kivy import platform
 from kivy.lang import Builder
 from kivy.core.audio import SoundLoader
 
-import time
 from random import choice
 
+audio_path = partial(os.path.join, "audio")
+image_path = partial(os.path.join, "images")
 
 Builder.load_file("menu.kv")
 
@@ -94,12 +96,12 @@ class MainWidget(RelativeLayout):
         Clock.schedule_interval(self.update, 1/60 )
 
     def init_audio(self):
-        self.sound_begin = SoundLoader.load(os.path.join("audio", "begin.wav"))
-        self.sound_galaxy = SoundLoader.load(os.path.join("audio", "galaxy.wav"))
-        self.game_soundtrack = SoundLoader.load(os.path.join("audio", "t.mp3"))
-        self.gameover_sound = SoundLoader.load(os.path.join("audio", "gameover_voice.wav"))
-        self.gameimpact = SoundLoader.load(os.path.join("audio", "gameover_impact.wav"))
-        self.encourage = SoundLoader.load(os.path.join("audio", "emma.wav"))
+        self.sound_begin = SoundLoader.load(audio_path("begin.wav"))
+        self.sound_galaxy = SoundLoader.load(audio_path("galaxy.wav"))
+        self.game_soundtrack = SoundLoader.load(audio_path("t.mp3"))
+        self.gameover_sound = SoundLoader.load(audio_path("gameover_voice.wav"))
+        self.gameimpact = SoundLoader.load(audio_path("gameover_impact.wav"))
+        self.encourage = SoundLoader.load(audio_path("emma.wav"))
 
     def reset_game(self):
         self.current_offset_y = 0
@@ -347,7 +349,7 @@ class GalaxyApp(App):
     sound = None
     def on_start(self):
         self.title = "Brian's Game"
-        self.sound = SoundLoader.load(os.path.join("audio", "galaxy.wav"))
+        self.sound = SoundLoader.load(audio_path("galaxy.wav"))
         self.sound.play()
  
  
